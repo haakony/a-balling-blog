@@ -108,11 +108,74 @@ def create_blog_post(data: Dict[str, Any], image_path: str, scene_image_path: st
         'description': f"A {content_type} about {first_sentence}."
     }
     
+    # Format the image paths correctly for Hugo
+    if image_path:
+        if image_path.startswith('images/'):
+            image_path = image_path[7:]
+        image_path = f"/images/{image_path}"
+    
+    if scene_image_path:
+        if scene_image_path.startswith('images/'):
+            scene_image_path = scene_image_path[7:]
+        scene_image_path = f"/images/{scene_image_path}"
+    
+    # Add the main image using markdown syntax if we have one
+    image_section = f"\n[![image]({image_path})]({datetime.now().strftime('%Y-%m-%d')}-{clean_title(data.get('title', ''))})\n" if image_path else ""
+    
+    # Create introduction section with the first part of the content
+    intro_section = f"""
+
+{first_sentence}
+
+"""
+    
+    # Process the content to insert the scene image
+    content_parts = content.split('[SCENE]')
+    content_with_image = content_parts[0]
+    if len(content_parts) > 1 and scene_image_path:
+        content_with_image += f"\n\n[![scene]({scene_image_path})]({datetime.now().strftime('%Y-%m-%d')}-{clean_title(data.get('title', ''))})\n\n" + content_parts[1]
+    else:
+        content_with_image = content
+    
+    # Add the prompts section at the end
+    prompts_section = f"""
+
+---
+
+### Generation Details
+
+#### {content_type.capitalize()} Generation Prompt
+```text
+Write a short, funny {content_type} about a {content.split('.')[0].split()[0]}. 
+The {content_type} should be around 300-400 words and be suitable for a blog post. 
+Make it engaging and humorous.
+```
+
+#### Image Generation Prompt
+```text
+{data.get('image_prompt', '')}
+```
+
+#### Scene Image Generation Prompt
+```text
+{data.get('scene_prompt', '')}
+```
+
+#### Image Generation Settings
+- Resolution: 768x768
+- Steps: 30
+- CFG: 7
+- Sampler: DPM++ 2M
+- Model: sd3_medium_incl_clips_t5xxlfp16.safetensors
+"""
+    
     # Create the content
     content = f"""---
 {yaml.dump(front_matter, allow_unicode=True, sort_keys=False)}---
 
-{content}"""
+{image_section}{intro_section}<!--more-->
+
+{content_with_image}{prompts_section}"""
     
     # Create the filename
     title = clean_title(data.get('title', f"Untitled {content_type.capitalize()}"))
