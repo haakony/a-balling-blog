@@ -131,7 +131,7 @@ Important:
             # Validate and ensure all required fields are present
             required_fields = {
                 "title": self._clean_title(f"The {ball_type.capitalize()}'s Adventure"),
-                "story": story_json,
+                "story": story_data.get('story', ''),
                 "image_prompt": self._clean_image_prompt(f"funny realistic illustration of {ball_type}"),
                 "scene_prompt": self._clean_image_prompt(f"funny realistic illustration of {ball_type}")
             }
