@@ -3,6 +3,8 @@
 import os
 import re
 from datetime import datetime
+from typing import Dict, Any
+import yaml
 
 from ..config.settings import CONTENT_DIR
 
@@ -82,113 +84,46 @@ def clean_content(content: str, content_type: str = 'story') -> str:
     
     return content
 
-def create_blog_post(story_data, image_path, scene_image_path, content_type="story"):
-    """Create a new Hugo blog post with the generated content and image."""
-    # Generate filename with current date
-    current_date = datetime.now()
-    date = current_date.strftime("%Y-%m-%d")
-    datetime_str = current_date.strftime("%Y-%m-%dT%H:%M:%S-00:00")
-    timestamp = current_date.strftime("%H%M%S")
+def create_blog_post(data: Dict[str, Any], image_path: str, scene_image_path: str, content_type: str = "story") -> str:
+    """Create a blog post with the given data and images."""
+    # Get the content based on content type
+    content = data.get('story' if content_type == 'story' else 'article', '')
+    if not content:
+        logger.warning(f"No content found for {content_type}, using default")
+        content = f"A {content_type} about a ball."
     
-    # Clean up the title
-    title = story_data['title']
-    clean_title_for_file = clean_title(title)
+    # Get the first sentence for the excerpt
+    first_sentence = content.split('.')[0] if '.' in content else content
     
-    # Create URL-friendly slug with timestamp to ensure uniqueness
-    filename = f"{CONTENT_DIR}/{date}-{clean_title_for_file}-{timestamp}.md"
+    # Create the front matter
+    front_matter = {
+        'title': data.get('title', f"Untitled {content_type.capitalize()}"),
+        'date': datetime.now().strftime('%Y-%m-%d'),
+        'draft': False,
+        'categories': [content_type, data.get('category', 'general')],
+        'tags': data.get('tags', []),
+        'image': image_path if image_path else '',
+        'scene_image': scene_image_path if scene_image_path else '',
+        'excerpt': first_sentence,
+        'description': f"A {content_type} about {first_sentence}."
+    }
     
-    # Format the image paths correctly for Hugo
-    if image_path:
-        if image_path.startswith('images/'):
-            image_path = image_path[7:]
-        image_path = f"/images/{image_path}"
-    
-    if scene_image_path:
-        if scene_image_path.startswith('images/'):
-            scene_image_path = scene_image_path[7:]
-        scene_image_path = f"/images/{scene_image_path}"
-    
-    # Get base tags from story data or use defaults
-    base_tags = story_data.get('tags', ['story', 'humor', 'ball', 'fiction', 'funny', 'adventure', 'random', 'generated'])
-    
-    # Add model tags
-    if 'openai' in story_data.get('models', []):
-        base_tags.extend(['openai', 'gpt-4'])
-    if 'dalle' in story_data.get('models', []):
-        base_tags.append('dalle')
-    
-    # Create the front matter and content
-    front_matter = f"""---
-title: "{title}"
-datetime: {datetime_str}
-draft: false
-categories: ["{content_type}s"]
-tags: {base_tags}
----
+    # Create the content
+    content = f"""---
+{yaml.dump(front_matter, allow_unicode=True, sort_keys=False)}---
 
-"""
+{content}"""
     
-    # Add the main image using markdown syntax if we have one, wrapped in a link
-    image_section = f"\n[![image]({image_path})]({date}-{clean_title_for_file}-{timestamp})\n" if image_path else ""
+    # Create the filename
+    title = clean_title(data.get('title', f"Untitled {content_type.capitalize()}"))
+    filename = f"{datetime.now().strftime('%Y-%m-%d')}-{title}.md"
     
-    # Get the content field based on type
-    content_field = 'story' if content_type == 'story' else 'article'
+    # Write the file
+    filepath = os.path.join(CONTENT_DIR, content_type, filename)
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
     
-    # Clean and process the content
-    content = clean_content(story_data[content_field], content_type)
-    
-    # Get the first part of the content (up to the first period)
-    first_part = content.split('.')[0] + '.'
-    
-    # Create introduction section with the first part of the content
-    intro_section = f"""
-
-{first_part}
-
-"""
-    
-    # Process the content to insert the scene image
-    content_parts = content.split('[SCENE]')
-    content_with_image = content_parts[0]
-    if len(content_parts) > 1 and scene_image_path:
-        content_with_image += f"\n\n[![scene]({scene_image_path})]({date}-{clean_title_for_file}-{timestamp})\n\n" + content_parts[1]
-    else:
-        content_with_image = content
-    
-    # Add the prompts section at the end
-    prompts_section = f"""
-
----
-
-### Generation Details
-
-#### {content_type.capitalize()} Generation Prompt
-```text
-Write a short, funny {content_type} about a {content.split('.')[0].split()[0]}. 
-The {content_type} should be around 300-400 words and be suitable for a blog post. 
-Make it engaging and humorous.
-```
-
-#### Image Generation Prompt
-```text
-{story_data['image_prompt']}
-```
-
-#### Scene Image Generation Prompt
-```text
-{story_data['scene_prompt']}
-```
-
-#### Image Generation Settings
-- Model: DALL-E 3
-- Size: 1024x1024
-- Quality: Standard
-- Style: Natural
-"""
-    
-    # Write the content to the file
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(front_matter + image_section + intro_section + "\n<!--more-->\n\n" + content_with_image + prompts_section)
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(content)
     
     return filename
 

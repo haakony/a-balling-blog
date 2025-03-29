@@ -108,7 +108,7 @@ The story should be around 300-400 words and be suitable for a blog post.
 Make it engaging and humorous, but keep it family-friendly and safe.
 Include a [SCENE] marker where you want an image to be inserted.
 
-Return the story in this exact JSON format:
+Format your response as a JSON object with these fields:
 {{
     "title": "A creative title for the story",
     "story": "The story content with [SCENE] marker",

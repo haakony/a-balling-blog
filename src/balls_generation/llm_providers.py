@@ -37,23 +37,27 @@ class OllamaProvider(LLMProvider):
     """Ollama API provider implementation."""
     
     def __init__(self):
-        self.api_url = os.getenv('OLLAMA_API_URL', 'http://localhost:11434')
+        self.api_url = os.getenv('OLLAMA_API_URL', 'http://192.168.1.9:11434')
         self.model = os.getenv('OLLAMA_MODEL', 'llama2')
-        logger.info(f"Initialized OllamaProvider with model: {self.model}")
+        logger.info(f"Initialized OllamaProvider with model: {self.model} at {self.api_url}")
     
     def generate_content(self, prompt: str) -> str:
         """Generate content using Ollama API."""
-        logger.info("Generating content with Ollama")
-        response = requests.post(
-            f"{self.api_url}/api/generate",
-            json={
-                "model": self.model,
-                "prompt": prompt,
-                "stream": False
-            }
-        )
-        response.raise_for_status()
-        return response.json()['response']
+        logger.info(f"Generating content with Ollama at {self.api_url}")
+        try:
+            response = requests.post(
+                f"{self.api_url}/api/generate",
+                json={
+                    "model": self.model,
+                    "prompt": prompt,
+                    "stream": False
+                }
+            )
+            response.raise_for_status()
+            return response.json()['response']
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error connecting to Ollama API: {e}")
+            raise
     
     def generate_image(self, prompt: str) -> Optional[str]:
         """Ollama doesn't support image generation."""

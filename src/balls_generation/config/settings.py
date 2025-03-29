@@ -9,10 +9,10 @@ load_dotenv()
 
 # API URLs and Keys
 OLLAMA_API_URL = os.getenv("OLLAMA_API_URL", "http://192.168.1.9:11434")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama2")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4")
-USE_OPENAI = os.getenv("USE_OPENAI", "true").lower() == "true"
+USE_OPENAI = os.getenv("USE_OPENAI", "false").lower() == "true"
 
 # OpenAI Image Generation Settings
 OPENAI_IMAGE_MODEL = os.getenv("OPENAI_IMAGE_MODEL", "dall-e-3")

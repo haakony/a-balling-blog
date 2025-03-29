@@ -114,7 +114,7 @@ The article should be around 300-400 words and follow a typical news article str
 Make it engaging and humorous, but keep it family-friendly and safe.
 Include a [SCENE] marker where you want an image to be inserted.
 
-Return the article in this exact JSON format:
+Format your response as a JSON object with these fields:
 {{
     "title": "A creative title for the article",
     "article": "The article content with [SCENE] marker",
@@ -139,7 +139,7 @@ Important:
             # Validate and ensure all required fields are present
             required_fields = {
                 "title": self._clean_title(f"Breaking: {ball_type.capitalize()} Makes Headlines"),
-                "article": article_json,
+                "article": f"A humorous news article about a {ball_type} in the {category} category.",
                 "category": category,
                 "image_prompt": self._clean_image_prompt(f"news article illustration of {ball_type}"),
                 "scene_prompt": self._clean_image_prompt(f"news article illustration of {ball_type}")
