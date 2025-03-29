@@ -51,7 +51,8 @@ class NewsGenerator:
             "date": "A realistic date for the article",
             "article": "The full article text with [SCENE] marker where appropriate",
             "image_prompt": "A detailed prompt for generating an illustration of the article's key scene",
-            "scene_prompt": "A detailed prompt for generating an illustration of the scene marked with [SCENE]"
+            "scene_prompt": "A detailed prompt for generating an illustration of the scene marked with [SCENE]",
+            "tags": ["news", "humor", "ball", "satire", "funny", "generated", "fake-news", "parody", "{category}"]
         }}
         
         Do not include any other text, markdown formatting, or code blocks. Return ONLY the JSON object."""
@@ -96,15 +97,19 @@ class NewsGenerator:
                     "date": datetime.now().strftime("%B %d, %Y"),
                     "article": result,
                     "image_prompt": f"news article illustration of {selected_ball}",
-                    "scene_prompt": f"news article illustration of {selected_ball}"
+                    "scene_prompt": f"news article illustration of {selected_ball}",
+                    "tags": ["news", "humor", "ball", "satire", "funny", "generated", "fake-news", "parody", category]
                 }
             
             # Validate the required fields
-            required_fields = ["title", "category", "date", "article", "image_prompt", "scene_prompt"]
+            required_fields = ["title", "category", "date", "article", "image_prompt", "scene_prompt", "tags"]
             for field in required_fields:
                 if field not in article_data:
                     print(f"Missing required field: {field}")
-                    article_data[field] = f"Missing {field}"
+                    if field == "tags":
+                        article_data[field] = ["news", "humor", "ball", "satire", "funny", "generated", "fake-news", "parody", category]
+                    else:
+                        article_data[field] = f"Missing {field}"
             
             # Clean up any markdown formatting that might have slipped through
             for field in article_data:

@@ -47,7 +47,8 @@ class StoryGenerator:
             "story": "The full story text with [SCENE] marker where appropriate",
             "summary": "The 3-line summary",
             "image_prompt": "A detailed prompt for generating an illustration of the story's key scene",
-            "scene_prompt": "A detailed prompt for generating an illustration of the scene marked with [SCENE]"
+            "scene_prompt": "A detailed prompt for generating an illustration of the scene marked with [SCENE]",
+            "tags": ["story", "humor", "ball", "fiction", "funny", "adventure", "random", "generated"]
         }}
         
         Do not include any other text, markdown formatting, or code blocks. Return ONLY the JSON object.
@@ -95,15 +96,19 @@ class StoryGenerator:
                     "story": story,
                     "summary": summary,
                     "image_prompt": f"funny realistic illustration of {story.split('.')[0]}",
-                    "scene_prompt": f"funny realistic illustration of {story.split('.')[0]}"
+                    "scene_prompt": f"funny realistic illustration of {story.split('.')[0]}",
+                    "tags": ["story", "humor", "ball", "fiction", "funny", "adventure", "random", "generated"]
                 }
             
             # Validate the required fields
-            required_fields = ["title", "story", "summary", "image_prompt", "scene_prompt"]
+            required_fields = ["title", "story", "summary", "image_prompt", "scene_prompt", "tags"]
             for field in required_fields:
                 if field not in story_data:
                     print(f"Missing required field: {field}")
-                    story_data[field] = f"Missing {field}"
+                    if field == "tags":
+                        story_data[field] = ["story", "humor", "ball", "fiction", "funny", "adventure", "random", "generated"]
+                    else:
+                        story_data[field] = f"Missing {field}"
             
             # Clean up any markdown formatting that might have slipped through
             for field in story_data:
