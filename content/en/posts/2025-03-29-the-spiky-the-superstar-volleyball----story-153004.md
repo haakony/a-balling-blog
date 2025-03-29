@@ -3,10 +3,10 @@ title: "Spiky the Superstar Volleyball"
 date: 2025-03-29
 draft: false
 categories: ["stories"]
-tags: ['story', 'humor', 'ball', 'fiction', 'funny', 'adventure', 'random', 'generated', 'openai', 'gpt-4', 'dalle']
+tags: ['story', 'humor', 'ball', 'fiction', 'funny', 'adventure', 'random', 'generated', 'openai', 'gpt-4']
 ---
 
-[![image](/images/image-153017.png)](2025-03-29-spiky-the-superstar-volleyball-153035)
+[![image](/images/main_20250329_152946.png)](2025-03-29-spiky-the-superstar-volleyball-153004)
 
 Once upon a time, in a town filled with passionate sports fans, there existed a volleyball named Spiky.
 
@@ -16,7 +16,7 @@ Once upon a time, in a town filled with passionate sports fans, there existed a 
 
 Spiky, you see, had an unusual canine-like tendency: he loved to chase his own shadow. This quirk added to his charm, often distracting players from the game with his comedic antics. 
 
-[![scene](/images/scene-153033.png)](2025-03-29-spiky-the-superstar-volleyball-153035)
+[![scene](/images/scene_20250329_153001.png)](2025-03-29-spiky-the-superstar-volleyball-153004)
 
 During one particularly intense beach volleyball match, Spiky, tirelessly chasing his elusive shadow, suddenly veered off course, sending the players into a frenzy. Spiky, rolling with glee, bumped into a sandcastle, sending the royal sandy architecture into a spectacular explosion. Dusting off the grains from his surface, he bounced right back into play, totally oblivious of the mild chaotic situation he'd set off.
 
