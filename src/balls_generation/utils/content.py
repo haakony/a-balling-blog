@@ -8,8 +8,22 @@ from ..config.settings import CONTENT_DIR
 
 def clean_title(title: str) -> str:
     """Clean up a title for use in filenames and front matter."""
+    # If title is a JSON string, try to parse it
+    if title.strip().startswith('{'):
+        try:
+            import json
+            data = json.loads(title)
+            if 'title' in data:
+                title = data['title']
+        except:
+            # If JSON parsing fails, just remove the JSON structure
+            title = re.sub(r'\{[^}]+\}', '', title)
+    
     # Remove any newlines and extra whitespace
     title = ' '.join(title.split())
+    
+    # Remove common problematic words
+    title = re.sub(r'\b(title|story|article|breaking)\b', '', title, flags=re.IGNORECASE)
     
     # Remove any special characters except spaces and hyphens
     title = re.sub(r'[^\w\s-]', '', title)
@@ -26,10 +40,21 @@ def clean_title(title: str) -> str:
     # Limit length to avoid overly long filenames
     return title[:50]
 
-def clean_content(content: str) -> str:
+def clean_content(content: str, content_type: str = 'story') -> str:
     """Clean up story/article content by removing JSON artifacts and extra whitespace."""
-    # Remove any JSON-like structures
-    content = re.sub(r'\{[^}]+\}', '', content)
+    # First, try to extract content from JSON if it exists
+    if content.strip().startswith('{'):
+        try:
+            import json
+            data = json.loads(content)
+            # Extract content based on type
+            if content_type == 'story' and 'story' in data:
+                content = data['story']
+            elif content_type == 'article' and 'article' in data:
+                content = data['article']
+        except:
+            # If JSON parsing fails, just remove the JSON structure
+            content = re.sub(r'\{[^}]+\}', '', content)
     
     # Remove any extra newlines (more than 2 consecutive)
     content = re.sub(r'\n{3,}', '\n\n', content)
@@ -42,7 +67,7 @@ def clean_content(content: str) -> str:
     
     return content
 
-def create_blog_post(story_data, image_path, scene_image_path):
+def create_blog_post(story_data, image_path, scene_image_path, content_type="story"):
     """Create a new Hugo blog post with the generated content and image."""
     # Generate filename with current date
     current_date = datetime.now()
@@ -82,7 +107,7 @@ def create_blog_post(story_data, image_path, scene_image_path):
 title: "{title}"
 datetime: {datetime_str}
 draft: false
-categories: ["stories"]
+categories: ["{content_type}s"]
 tags: {base_tags}
 ---
 
@@ -91,26 +116,29 @@ tags: {base_tags}
     # Add the main image using markdown syntax if we have one, wrapped in a link
     image_section = f"\n[![image]({image_path})]({date}-{clean_title_for_file}-{timestamp})\n" if image_path else ""
     
-    # Clean and process the story content
-    story_content = clean_content(story_data['story'])
+    # Get the content field based on type
+    content_field = 'story' if content_type == 'story' else 'article'
     
-    # Get the first part of the story (up to the first period)
-    first_part = story_content.split('.')[0] + '.'
+    # Clean and process the content
+    content = clean_content(story_data[content_field], content_type)
     
-    # Create introduction section with the first part of the story
+    # Get the first part of the content (up to the first period)
+    first_part = content.split('.')[0] + '.'
+    
+    # Create introduction section with the first part of the content
     intro_section = f"""
 
 {first_part}
 
 """
     
-    # Process the story to insert the scene image
-    story_parts = story_content.split('[SCENE]')
-    story_with_image = story_parts[0]
-    if len(story_parts) > 1 and scene_image_path:
-        story_with_image += f"\n\n[![scene]({scene_image_path})]({date}-{clean_title_for_file}-{timestamp})\n\n" + story_parts[1]
+    # Process the content to insert the scene image
+    content_parts = content.split('[SCENE]')
+    content_with_image = content_parts[0]
+    if len(content_parts) > 1 and scene_image_path:
+        content_with_image += f"\n\n[![scene]({scene_image_path})]({date}-{clean_title_for_file}-{timestamp})\n\n" + content_parts[1]
     else:
-        story_with_image = story_content
+        content_with_image = content
     
     # Add the prompts section at the end
     prompts_section = f"""
@@ -119,10 +147,10 @@ tags: {base_tags}
 
 ### Generation Details
 
-#### Story Generation Prompt
+#### {content_type.capitalize()} Generation Prompt
 ```text
-Write a short, funny story about a {story_content.split('.')[0].split()[0]}. 
-The story should be around 300-400 words and be suitable for a blog post. 
+Write a short, funny {content_type} about a {content.split('.')[0].split()[0]}. 
+The {content_type} should be around 300-400 words and be suitable for a blog post. 
 Make it engaging and humorous.
 ```
 
@@ -145,7 +173,7 @@ Make it engaging and humorous.
     
     # Write the content to the file
     with open(filename, "w", encoding="utf-8") as f:
-        f.write(front_matter + image_section + intro_section + "\n<!--more-->\n\n" + story_with_image + prompts_section)
+        f.write(front_matter + image_section + intro_section + "\n<!--more-->\n\n" + content_with_image + prompts_section)
     
     return filename
 
@@ -202,7 +230,7 @@ tags: {base_tags}
     image_section = f"\n[![image]({image_path})]({date}-{clean_title_for_file}-{timestamp})\n" if image_path else ""
     
     # Clean and process the article content
-    article_content = clean_content(article_data['article'])
+    article_content = clean_content(article_data['article'], 'article')
     
     # Get the first part of the article (up to the first period)
     first_part = article_content.split('.')[0] + '.'

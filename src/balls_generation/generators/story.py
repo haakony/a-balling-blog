@@ -37,6 +37,22 @@ class StoryGenerator:
         # Limit the length to avoid complex prompts
         return ' '.join(prompt.split()[:20])
     
+    def _clean_title(self, title: str) -> str:
+        """Clean and format the title to be URL-friendly."""
+        # Remove any JSON-like artifacts
+        title = re.sub(r'\{.*?\}', '', title, flags=re.DOTALL)
+        title = re.sub(r'```.*?```', '', title, flags=re.DOTALL)
+        
+        # Remove special characters and extra whitespace
+        title = re.sub(r'[^\w\s-]', '', title)
+        title = re.sub(r'\s+', ' ', title)
+        title = title.strip()
+        
+        # Capitalize first letter of each word
+        title = ' '.join(word.capitalize() for word in title.split())
+        
+        return title
+    
     def _parse_json_response(self, response: str) -> Dict[str, Any]:
         """Parse JSON response, handling various formats and fallbacks."""
         try:
@@ -55,14 +71,27 @@ class StoryGenerator:
             
             # If we still don't have valid JSON, create a structured response
             logger.info("Falling back to text format...")
+            
+            # Clean up the response text
             story = response.strip()
+            
+            # Remove any JSON-like artifacts
+            story = re.sub(r'\{.*?\}', '', story, flags=re.DOTALL)
+            story = re.sub(r'```.*?```', '', story, flags=re.DOTALL)
+            story = re.sub(r'\[SCENE\]', '', story)
+            
+            # Clean up extra whitespace
+            story = re.sub(r'\s+', ' ', story)
+            story = story.strip()
+            
+            # Get the first sentence for the title
             first_sentence = story.split('.')[0] if '.' in story else story
             
             # Create safe image prompts
             safe_prompt = self._clean_image_prompt(f"funny realistic illustration of {first_sentence}")
             
             return {
-                "title": f"The {first_sentence}",
+                "title": self._clean_title(f"The {first_sentence}"),
                 "story": story,
                 "image_prompt": safe_prompt,
                 "scene_prompt": safe_prompt
@@ -78,7 +107,8 @@ class StoryGenerator:
 The story should be around 300-400 words and be suitable for a blog post. 
 Make it engaging and humorous, but keep it family-friendly and safe.
 Include a [SCENE] marker where you want an image to be inserted.
-The story should be in JSON format with the following structure:
+
+Return the story in this exact JSON format:
 {{
     "title": "A creative title for the story",
     "story": "The story content with [SCENE] marker",
@@ -89,7 +119,9 @@ The story should be in JSON format with the following structure:
 Important: 
 1. Return ONLY the JSON object, no additional text or formatting
 2. Keep all content family-friendly and safe
-3. Avoid any violent or dangerous scenarios"""
+3. Avoid any violent or dangerous scenarios
+4. Make sure the story has proper paragraphs and formatting
+5. Use the [SCENE] marker only once in the middle of the story"""
         
         try:
             # Generate story content using the LLM provider
@@ -98,7 +130,7 @@ Important:
             
             # Validate and ensure all required fields are present
             required_fields = {
-                "title": f"The {ball_type.capitalize()}'s Adventure",
+                "title": self._clean_title(f"The {ball_type.capitalize()}'s Adventure"),
                 "story": story_json,
                 "image_prompt": self._clean_image_prompt(f"funny realistic illustration of {ball_type}"),
                 "scene_prompt": self._clean_image_prompt(f"funny realistic illustration of {ball_type}")
@@ -110,29 +142,13 @@ Important:
                     logger.warning(f"Missing or empty field: {field}, using default")
                     story_data[field] = default_value
             
-            # Clean image prompts
+            # Clean image prompts and title
             story_data['image_prompt'] = self._clean_image_prompt(story_data['image_prompt'])
             story_data['scene_prompt'] = self._clean_image_prompt(story_data['scene_prompt'])
+            story_data['title'] = self._clean_title(story_data['title'])
             
-            # Generate main image
-            image_path = None
-            if self.llm_provider.generate_image:
-                try:
-                    image_url = self.llm_provider.generate_image(story_data['image_prompt'])
-                    if image_url:
-                        image_path = download_and_save_image(image_url, "main")
-                except Exception as e:
-                    logger.error(f"Error generating main image: {e}")
-            
-            # Generate scene image if there's a scene marker
-            scene_image_path = None
-            if '[SCENE]' in story_data['story'] and self.llm_provider.generate_image:
-                try:
-                    scene_url = self.llm_provider.generate_image(story_data['scene_prompt'])
-                    if scene_url:
-                        scene_image_path = download_and_save_image(scene_url, "scene")
-                except Exception as e:
-                    logger.error(f"Error generating scene image: {e}")
+            # Format the story content
+            story_data['story'] = story_data['story'].replace('\n\n', '\n').strip()
             
             # Add model tags
             story_data['tags'] = [
@@ -142,13 +158,13 @@ Important:
             ]
             
             # Create the blog post
-            filename = create_blog_post(story_data, image_path, scene_image_path)
+            filename = create_blog_post(story_data, "", "", "story")
             
             return {
                 'filename': filename,
                 'story_data': story_data,
-                'image_path': image_path,
-                'scene_image_path': scene_image_path
+                'image_path': "",
+                'scene_image_path': ""
             }
             
         except Exception as e:
