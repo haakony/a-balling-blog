@@ -23,7 +23,7 @@ def clean_title(title: str) -> str:
     title = ' '.join(title.split())
     
     # Remove common problematic words
-    title = re.sub(r'\b(title|story|article|breaking)\b', '', title, flags=re.IGNORECASE)
+    title = re.sub(r'\b(title|story|article|breaking|json)\b', '', title, flags=re.IGNORECASE)
     
     # Remove any special characters except spaces and hyphens
     title = re.sub(r'[^\w\s-]', '', title)
@@ -38,7 +38,7 @@ def clean_title(title: str) -> str:
     title = title.strip('-')
     
     # Limit length to avoid overly long filenames
-    return title[:50]
+    return title[:30]
 
 def clean_content(content: str, content_type: str = 'story') -> str:
     """Clean up story/article content by removing JSON artifacts and extra whitespace."""
@@ -56,6 +56,10 @@ def clean_content(content: str, content_type: str = 'story') -> str:
             # If JSON parsing fails, just remove the JSON structure
             content = re.sub(r'\{[^}]+\}', '', content)
     
+    # Remove any code blocks and JSON artifacts
+    content = re.sub(r'```.*?```', '', content, flags=re.DOTALL)
+    content = re.sub(r'\{.*?\}', '', content, flags=re.DOTALL)
+    
     # Remove any extra newlines (more than 2 consecutive)
     content = re.sub(r'\n{3,}', '\n\n', content)
     
@@ -64,6 +68,9 @@ def clean_content(content: str, content_type: str = 'story') -> str:
     
     # Replace any remaining \n\n with actual newlines
     content = content.replace('\\n\\n', '\n\n')
+    
+    # Remove any remaining JSON-like artifacts
+    content = re.sub(r'```json\s*\{.*?\}```', '', content, flags=re.DOTALL)
     
     return content
 
