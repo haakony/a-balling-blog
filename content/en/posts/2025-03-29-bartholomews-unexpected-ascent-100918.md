@@ -2,6 +2,8 @@
 title: "Bartholomews Unexpected Ascent"
 date: 2025-03-29
 draft: false
+tags: ["demo"]
+categories: ["post"]
 ---
 
 

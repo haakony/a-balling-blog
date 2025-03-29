@@ -1,11 +1,14 @@
 """Main entry point for the balls generation system."""
 
 import os
+import random
 from datetime import datetime
 
 from .generators.story import StoryGenerator
+from .generators.news import NewsGenerator
 from .generators.image import ImageGenerator
 from .utils.deploy import deploy
+from .utils.content import create_news_article
 from .config.settings import CONTENT_DIR
 
 def create_blog_post(story_data, image_path, scene_image_path):
@@ -112,39 +115,62 @@ def main():
     
     # Initialize generators
     story_generator = StoryGenerator()
+    news_generator = NewsGenerator()
     image_generator = ImageGenerator()
     
-    # Generate story
-    print("Generating story...")
-    story_data = story_generator.generate_story()
+    # Randomly choose between story and news article
+    content_type = random.choice(["story", "news"])
     
-    if story_data:
-        # Generate main image
-        print("Generating main image...")
-        image_path, _ = image_generator.generate_image(story_data['image_prompt'], "image")
+    if content_type == "story":
+        # Generate story
+        print("Generating story...")
+        story_data = story_generator.generate_story()
         
-        if image_path:
-            # Generate scene image
-            print("Generating scene image...")
-            scene_image_path = image_generator.generate_image(story_data['scene_prompt'], "scene")[0]
+        if story_data:
+            # Generate main image
+            print("Generating main image...")
+            image_path, _ = image_generator.generate_image(story_data['image_prompt'], "image")
             
-            # Create blog post
-            print("Creating blog post...")
-            filename = create_blog_post(story_data, image_path, scene_image_path)
-            print(f"Blog post created at: {filename}")
-            
-            # Deploy
-            print("Deploying...")
-            deploy()
-        else:
-            print("Failed to generate main image. Creating post without images...")
-            filename = create_blog_post(story_data, "", "")
-            print(f"Blog post created at: {filename}")
-            
-            print("Deploying...")
-            deploy()
+            if image_path:
+                # Generate scene image
+                print("Generating scene image...")
+                scene_image_path = image_generator.generate_image(story_data['scene_prompt'], "scene")[0]
+                
+                # Create blog post
+                print("Creating blog post...")
+                filename = create_blog_post(story_data, image_path, scene_image_path)
+                print(f"Blog post created at: {filename}")
+            else:
+                print("Failed to generate main image. Creating post without images...")
+                filename = create_blog_post(story_data, "", "")
+                print(f"Blog post created at: {filename}")
     else:
-        print("Failed to generate story. Please check if Ollama is running.")
+        # Generate news article
+        print("Generating news article...")
+        article_data = news_generator.generate_article()
+        
+        if article_data:
+            # Generate main image
+            print("Generating main image...")
+            image_path, _ = image_generator.generate_image(article_data['image_prompt'], "image")
+            
+            if image_path:
+                # Generate scene image
+                print("Generating scene image...")
+                scene_image_path = image_generator.generate_image(article_data['scene_prompt'], "scene")[0]
+                
+                # Create news article
+                print("Creating news article...")
+                filename = create_news_article(article_data, image_path, scene_image_path)
+                print(f"News article created at: {filename}")
+            else:
+                print("Failed to generate main image. Creating article without images...")
+                filename = create_news_article(article_data, "", "")
+                print(f"News article created at: {filename}")
+    
+    # Deploy
+    print("Deploying...")
+    deploy()
 
 if __name__ == "__main__":
     main() 

@@ -77,6 +77,18 @@ class ImageGenerator:
             }
         }
     
+    def _unload_vram(self):
+        """Unload VRAM by clearing the model from memory."""
+        try:
+            print("Unloading VRAM...")
+            response = requests.post(f"{self.base_url}/free", headers=self.headers)
+            if response.status_code == 200:
+                print("VRAM unloaded successfully")
+            else:
+                print(f"Failed to unload VRAM: {response.status_code}")
+        except Exception as e:
+            print(f"Error unloading VRAM: {e}")
+    
     def generate_image(self, prompt, prefix="image"):
         """Generate an image using ComfyUI API."""
         try:
@@ -118,6 +130,10 @@ class ImageGenerator:
                                 with open(filepath, "wb") as f:
                                     f.write(image_response.content)
                                 print(f"{prefix.capitalize()} saved to: {filepath}")
+                                
+                                # Unload VRAM after successful generation
+                                self._unload_vram()
+                                
                                 return filename, prompt
                             else:
                                 print(f"Failed to download {prefix}: {image_response.status_code}")
