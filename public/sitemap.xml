@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>http://192.168.1.12:1313/</loc>
+    <lastmod>2025-03-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://192.168.1.12:1313/en/</loc>
+    <lastmod>2025-03-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://192.168.1.12:1313/en/posts/2025-03-29-tennis-ball-tango-on-the-golf-course-080138/</loc>
+    <lastmod>2025-03-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://192.168.1.12:1313/en/posts/2025-03-28-bartholomews-existential-crisis-at-the-miniature-golf-course-130351/</loc>
+    <lastmod>2025-03-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://192.168.1.12:1313/en/posts/2025-03-28-the-great-backyard-kickball-heist-134500/</loc>
+    <lastmod>2025-03-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://192.168.1.12:1313/en/posts/2025-03-28-the-great-gymnasium-escape-132650/</loc>
+    <lastmod>2025-03-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://192.168.1.12:1313/en/posts/2025-03-28-the-great-softball-escape-142537/</loc>
+    <lastmod>2025-03-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://192.168.1.12:1313/en/posts/2025-03-28-the-great-stadium-slip-n-slide-133040/</loc>
+    <lastmod>2025-03-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://192.168.1.12:1313/author/</loc>
+  </url><url>
+    <loc>http://192.168.1.12:1313/categories/</loc>
+  </url><url>
+    <loc>http://192.168.1.12:1313/series/</loc>
+  </url><url>
+    <loc>http://192.168.1.12:1313/tags/</loc>
+  </url>
+</urlset>

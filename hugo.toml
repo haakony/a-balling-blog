@@ -1,0 +1,204 @@
+baseURL = 'https://balls.no/'
+title = "AI generated content"
+
+# Change to one of your content languages defined at the end.
+DefaultContentLanguage = "en"
+
+# Enable / Disable Google Analytics statistics
+googleAnalytics = "G-XXXXXXXXXX"
+
+# Generate the robots.txt file for SEO
+enableRobotsTXT = true
+
+[module]
+    [[module.imports]]
+        path = "github.com/mirmousaviii/mostafa-hugo-theme"
+
+# Enable the menu in the header
+# Also, you can add it in the language section for each language
+[menus]
+[[menus.main]]
+  name = "allPosts"
+  url = "/"
+weight = 10
+[[menus.main]]
+  name = "categories"
+  url = "/categories/"
+  weight = 20
+[[menus.main]]
+  name = "tags"
+  url = "/tags/"
+  weight = 30
+[[menus.main]]
+  name = "about"
+  url = "/categories/about/"
+  weight = 40
+#[[menus.main]]
+#  name = "Mostafa"
+#  url = "https://mirmousavi.com/"
+#  weight = 50
+#  [menus.main.params]
+#    external = true
+
+
+[params]
+    # Custom CSS / JS modules that will be imported by the template.
+    # Files are relative to the static/ directory or a URL.
+    # Files are imported in the order they appear here, after
+    # theme.css and theme.js, respectively.
+    css_modules = []
+    js_modules = []
+
+    # Description and meta data for the search engines
+    author = "Haakony"
+    description = "Software Engineer"
+    keywords = "javascript, typescript, react, nodejs, monkeyc"
+    subtitle = "A software engineer"
+
+
+    # How many articles should be displayed at once?
+    paginate = 10
+
+    # Media configuration
+    # let hugo automatically resize and crop your images to the correct sizes
+    # NB: When enabled the image files get renamed by adding additional information,
+    #     even if the image has the correct sizes.
+    resizeImages = true
+
+
+    # always display the top navigation when scrolling
+    # works only with permanentTopNav = true
+    #stickyNav = true
+
+
+    # Style configuration
+    #contentFont = "'Open Sans',sans-serif"
+    #contentRTLFont = "Vazirmatn, sans-serif"
+
+    #baseColor = "#191A19"
+    #pageBackgroundColor = "$base-color"
+    #specialColor = "#2D3642"
+    #highlightColor = "#ffffff"
+    #textColor = "#7a7a7a"
+
+    #navBackgroundColor = "$special-color"
+    #navTextColor = "$page-background-color"
+    #algoliaSearchBoxColor = "#444"
+    #algoliaSearchBoxIconColor = "#888"
+    #algoliaSearchBoxBackgroundColor = "#fafafa"
+    #algoliaBorderColor = "#e4e4e4"
+
+    #headerTextColor = "#FF8D00"
+
+    #logoColor = "darken($page-background-color, 1)"
+    #bubbleColor = "$highlight-color"
+    #bubbleBackgroundColor = "#ccc"
+    #bubbleHoverColor = "$highlight-color"
+
+    #articleBackgroundColor = "#343434"
+    #metaTextColor = "#999999"
+    #metaBorderColor = "#eeeeee"
+    #continueReadingHoverColor = "$meta-text-color"
+
+    #footerBackgroundColor = "$page-background-color"
+    #footerHeadlineColor = "$highlight-color"
+
+
+    # Content configuration
+    # Enable an optional pinned page to display at the top of the index
+    #pinnedPost = "/quote/routine/"
+    # Set to true to pin only to the first page, false to all pages
+    #pinOnlyToFirstPage = true
+
+    # enable highlight.js for syntax highlighting or (if set to false) use
+    # the hugo built-in chroma highlighter
+    enableHighlightJs = true
+
+    # enable automatic localization of the article's PublishedDate with momentjs
+    enableMomentJs = false
+
+    # customize the date format | only works if momentjs is disabled | only works with English month names
+    # you can customize it with the options you find here:
+    # https://gohugo.io/methods/time/format/
+    dateFormat = "Monday, January 2, 2006" #default is 2006-01-02
+
+    # display the estimated reading time for an article
+    showReadingTime = true
+
+    # Minimum word count to display the Table of Contents
+    tocMinWordCount = 400
+
+    # Footer configuration
+    showFooter = true
+
+    # How many articles should be displayed at latest posts in the footer?
+    # Set to -1 to hide the 'Latest Posts' column
+    amountLatestPostsInFooter = 7
+
+    # How many categories should be displayed in the footer section?
+    # Set to -1 to hide the 'Categories' column
+    amountCategoriesInFooter = 7
+
+    # define your links with FontAwesome 5 (only free icons are supported)
+    # all icons https://fontawesome.com/icons?d=gallery&m=free
+    # brand icons https://fontawesome.com/icons?d=gallery&s=brands&m=free
+    socialMediaLinks = [
+        { name = "GitHub", link = "https://github.com/haakony", icon = "fab fa-github"},
+        { name = "Linkedin", link = "https://linkedin.com/in/haakony/en", icon = "fab fa-linkedin" },
+        { name = "Twitter / X", link = "https://twitter.com/", icon = "fab fa-twitter" },
+        { name = "RSS", link = "/index.xml", icon = "fas fa-rss" },
+    ]
+
+    # show other links in the footer
+    otherLinks = [
+        { name = "Haakony.no", link = "https://haakony.no"},
+    ]
+
+    # show an archive link in the footer
+    #showArchive = true
+
+    # archive grouping: "2006" by year, "2006-01" by month
+    #archiveDateGrouping = "2006-01"
+
+    # credits line configuration
+    #copyrightUseCurrentYear = true  # set to true to always display the current year in the copyright
+    #copyrightYearOverride = "2024"
+    copyrightBy = "by Haakony" # default is "by {site title}"
+    copyrightUrl = "https://haakony.no" # default is .Site.BaseURL
+
+
+# customize your available languages for your multi-lingual site
+[Languages]
+    [Languages.en]
+        weight = 10
+        languageCode = 'en-US'
+        languageDirection = 'ltr'
+        languageName = 'English'
+        title = "A balling site"
+        [Languages.en.params]
+            subtitle = "Theme Demo"
+    
+
+[markup]
+    defaultMarkdownHandler = 'goldmark'
+    [markup.goldmark]
+    [markup.goldmark.renderer]
+      # change to 'true' if you need to render raw HTML within your markdown content
+      unsafe = false
+
+    [markup.tableOfContents]
+        endLevel = 5
+        ordered = false
+        startLevel = 2
+
+
+# do NOT change anything below
+[taxonomies]
+    author   = "author"
+    tag      = "tags"
+    category = "categories"
+    series   = "series"
+
+[outputs]
+    home = [ "HTML", "RSS", "JSON" ]
+    page = [ "HTML", "RSS" ]
