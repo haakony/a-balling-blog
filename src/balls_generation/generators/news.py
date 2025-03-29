@@ -109,27 +109,28 @@ class NewsGenerator:
         category = random.choice(self.categories)
         
         # Generate the article
-        article_prompt = f"""Write a humorous fake news article about a {ball_type} in the {category} category.
+        article_prompt = f"""Create a humorous fake news article about a {ball_type} in the {category} category.
 The article should be around 300-400 words and follow a typical news article structure.
 Make it engaging and humorous, but keep it family-friendly and safe.
 Include a [SCENE] marker where you want an image to be inserted.
 
-Format your response as a JSON object with these fields:
+You must return a JSON object with exactly these fields:
 {{
-    "title": "A creative title for the article",
-    "article": "The article content with [SCENE] marker",
+    "title": "A creative, engaging title for the article",
+    "article": "The full article content with [SCENE] marker",
     "category": "{category}",
     "image_prompt": "A family-friendly prompt for generating the main image",
     "scene_prompt": "A family-friendly prompt for generating the scene image"
 }}
 
-Important: 
-1. Return ONLY the JSON object, no additional text or formatting
-2. Keep all content family-friendly and safe
-3. Avoid any violent or dangerous scenarios
-4. Make sure the article has proper paragraphs and formatting
-5. Use the [SCENE] marker only once in the middle of the article
-6. Follow a typical news article structure with an introduction, body, and conclusion"""
+Requirements:
+1. The title should be catchy and newsworthy
+2. The article should have proper paragraphs and formatting
+3. Use the [SCENE] marker only once in the middle of the article
+4. Keep all content family-friendly and safe
+5. Avoid any violent or dangerous scenarios
+6. Follow a typical news article structure with an introduction, body, and conclusion
+7. Make the content engaging and humorous"""
         
         try:
             # Generate article content using the LLM provider

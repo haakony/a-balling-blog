@@ -4,6 +4,8 @@ import os
 from abc import ABC, abstractmethod
 from typing import Dict, Any, Optional
 import logging
+import re
+import json
 
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -38,23 +40,47 @@ class OllamaProvider(LLMProvider):
     
     def __init__(self):
         self.api_url = os.getenv('OLLAMA_API_URL', 'http://192.168.1.9:11434')
-        self.model = os.getenv('OLLAMA_MODEL', 'llama2')
+        self.model = os.getenv('OLLAMA_MODEL', 'llama3.1:8b')
         logger.info(f"Initialized OllamaProvider with model: {self.model} at {self.api_url}")
     
     def generate_content(self, prompt: str) -> str:
         """Generate content using Ollama API."""
         logger.info(f"Generating content with Ollama at {self.api_url}")
         try:
+            # Add system prompt to ensure proper JSON formatting
+            system_prompt = """You are a creative writer who specializes in generating humorous stories and satirical news articles.
+You must ALWAYS respond with a valid JSON object containing the requested fields.
+Do not include any additional text, explanations, or formatting outside the JSON object.
+The JSON must be properly formatted and complete."""
+            
             response = requests.post(
                 f"{self.api_url}/api/generate",
                 json={
                     "model": self.model,
-                    "prompt": prompt,
-                    "stream": False
+                    "prompt": f"{system_prompt}\n\n{prompt}",
+                    "stream": False,
+                    "format": "json"  # Request JSON format
                 }
             )
             response.raise_for_status()
-            return response.json()['response']
+            
+            # Get the response text
+            response_text = response.json()['response']
+            
+            # Try to extract JSON if the response includes markdown code blocks
+            if '```json' in response_text:
+                json_match = re.search(r'```json\s*({.*?})\s*```', response_text, re.DOTALL)
+                if json_match:
+                    response_text = json_match.group(1)
+            
+            # Validate that we have a JSON object
+            try:
+                json.loads(response_text)
+                return response_text
+            except json.JSONDecodeError:
+                logger.error("Ollama response is not valid JSON")
+                raise ValueError("Invalid JSON response from Ollama")
+                
         except requests.exceptions.RequestException as e:
             logger.error(f"Error connecting to Ollama API: {e}")
             raise
