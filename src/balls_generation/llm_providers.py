@@ -2,7 +2,7 @@
 
 import os
 from abc import ABC, abstractmethod
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import logging
 
 from openai import OpenAI
@@ -22,6 +22,15 @@ class LLMProvider(ABC):
     @abstractmethod
     def generate_content(self, prompt: str) -> str:
         """Generate content from a prompt."""
+        pass
+    
+    @abstractmethod
+    def generate_image(self, prompt: str) -> Optional[str]:
+        """Generate an image from a prompt.
+        
+        Returns:
+            Optional[str]: URL of the generated image, or None if image generation is not supported
+        """
         pass
 
 class OllamaProvider(LLMProvider):
@@ -45,6 +54,11 @@ class OllamaProvider(LLMProvider):
         )
         response.raise_for_status()
         return response.json()['response']
+    
+    def generate_image(self, prompt: str) -> Optional[str]:
+        """Ollama doesn't support image generation."""
+        logger.warning("Image generation not supported by Ollama")
+        return None
 
 class OpenAIProvider(LLMProvider):
     """OpenAI API provider implementation."""
@@ -56,7 +70,10 @@ class OpenAIProvider(LLMProvider):
         
         self.client = OpenAI(api_key=api_key)
         self.model = os.getenv('OPENAI_MODEL', 'gpt-3.5-turbo')
-        logger.info(f"Initialized OpenAIProvider with model: {self.model}")
+        self.image_model = os.getenv('OPENAI_IMAGE_MODEL', 'dall-e-3')
+        self.image_quality = os.getenv('OPENAI_IMAGE_QUALITY', 'standard')
+        self.image_size = os.getenv('OPENAI_IMAGE_SIZE', '1024x1024')
+        logger.info(f"Initialized OpenAIProvider with model: {self.model} and image model: {self.image_model}")
     
     def generate_content(self, prompt: str) -> str:
         """Generate content using OpenAI API."""
@@ -70,6 +87,22 @@ class OpenAIProvider(LLMProvider):
             max_tokens=int(os.getenv('MAX_STORY_LENGTH', 400))
         )
         return response.choices[0].message.content
+    
+    def generate_image(self, prompt: str) -> Optional[str]:
+        """Generate an image using DALL-E."""
+        logger.info(f"Generating image with {self.image_model}")
+        try:
+            response = self.client.images.generate(
+                model=self.image_model,
+                prompt=prompt,
+                size=self.image_size,
+                quality=self.image_quality,
+                n=1
+            )
+            return response.data[0].url
+        except Exception as e:
+            logger.error(f"Error generating image: {e}")
+            return None
 
 def get_llm_provider() -> LLMProvider:
     """Factory function to get the configured LLM provider."""

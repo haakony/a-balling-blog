@@ -46,6 +46,8 @@ def create_blog_post(story_data, image_path, scene_image_path):
 title: "{title}"
 date: {date}
 draft: false
+categories: ["stories"]
+tags: {story_data.get('tags', ['story', 'humor', 'ball', 'fiction', 'funny', 'adventure', 'random', 'generated'])}
 ---
 
 """
@@ -129,20 +131,20 @@ def main():
         if story_data:
             # Generate main image
             print("Generating main image...")
-            image_path, _ = image_generator.generate_image(story_data['image_prompt'], "image")
+            image_path, _ = image_generator.generate_image(story_data['story_data']['image_prompt'], "image")
             
             if image_path:
                 # Generate scene image
                 print("Generating scene image...")
-                scene_image_path = image_generator.generate_image(story_data['scene_prompt'], "scene")[0]
+                scene_image_path = image_generator.generate_image(story_data['story_data']['scene_prompt'], "scene")[0]
                 
                 # Create blog post
                 print("Creating blog post...")
-                filename = create_blog_post(story_data, image_path, scene_image_path)
+                filename = create_blog_post(story_data['story_data'], image_path, scene_image_path)
                 print(f"Blog post created at: {filename}")
             else:
                 print("Failed to generate main image. Creating post without images...")
-                filename = create_blog_post(story_data, "", "")
+                filename = create_blog_post(story_data['story_data'], "", "")
                 print(f"Blog post created at: {filename}")
     else:
         # Generate news article
@@ -152,20 +154,20 @@ def main():
         if article_data:
             # Generate main image
             print("Generating main image...")
-            image_path, _ = image_generator.generate_image(article_data['image_prompt'], "image")
+            image_path, _ = image_generator.generate_image(article_data['article_data']['image_prompt'], "image")
             
             if image_path:
                 # Generate scene image
                 print("Generating scene image...")
-                scene_image_path = image_generator.generate_image(article_data['scene_prompt'], "scene")[0]
+                scene_image_path = image_generator.generate_image(article_data['article_data']['scene_prompt'], "scene")[0]
                 
                 # Create news article
                 print("Creating news article...")
-                filename = create_news_article(article_data, image_path, scene_image_path)
+                filename = create_news_article(article_data['article_data'], image_path, scene_image_path)
                 print(f"News article created at: {filename}")
             else:
                 print("Failed to generate main image. Creating article without images...")
-                filename = create_news_article(article_data, "", "")
+                filename = create_news_article(article_data['article_data'], "", "")
                 print(f"News article created at: {filename}")
     
     # Deploy

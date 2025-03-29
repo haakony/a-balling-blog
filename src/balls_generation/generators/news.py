@@ -1,123 +1,165 @@
-"""News article generation module using Ollama API."""
+"""News article generation module."""
 
 import json
 import random
 import re
-import requests
+from typing import Dict, Any, List
+import logging
 from datetime import datetime
 
-from ..config.settings import OLLAMA_API_URL, BALL_TYPES
+from ..llm_providers import get_llm_provider
+from ..utils.content import create_news_article
+from ..utils.images import download_and_save_image
+
+logger = logging.getLogger(__name__)
 
 class NewsGenerator:
-    """Handles news article generation using the Ollama API."""
+    """Generates satirical news articles about balls."""
     
     def __init__(self):
-        """Initialize the news generator."""
-        self.url = OLLAMA_API_URL
-    
-    def generate_article(self):
-        """Generate a fake news article using Ollama API."""
-        # Randomly select a ball type
-        selected_ball = random.choice(BALL_TYPES)
-        
-        # Randomly select a news category
-        news_categories = [
-            "breaking news", "exclusive", "investigation", "sports", "technology",
-            "entertainment", "science", "local news", "international", "business"
+        self.llm_provider = get_llm_provider()
+        self.ball_types = [
+            "tennis ball", "basketball", "soccer ball", "baseball", "volleyball",
+            "golf ball", "ping pong ball", "bowling ball", "beach ball", "croquet ball",
+            "billiard ball", "rugby ball", "football", "cricket ball", "hockey puck"
         ]
-        category = random.choice(news_categories)
+        self.categories = [
+            "sports", "politics", "technology", "entertainment", "science",
+            "business", "health", "education", "environment", "lifestyle"
+        ]
+    
+    def _clean_image_prompt(self, prompt: str) -> str:
+        """Clean and filter image prompts to avoid content policy violations."""
+        # Remove any potentially problematic words
+        problematic_words = ['violence', 'danger', 'harm', 'injury', 'damage', 'destruction']
+        for word in problematic_words:
+            prompt = prompt.replace(word, '')
         
-        prompt = f"""You are a creative writing assistant that generates fake news articles in JSON format.
-        Your task is to write a humorous fake news article about a {selected_ball} in the {category} category.
+        # Ensure the prompt is family-friendly
+        prompt = f"family-friendly, safe, {prompt}"
         
-        The article should be around 300-400 words and follow a typical news article structure:
-        1. Start with a catchy headline
-        2. Include a lead paragraph that summarizes the key points
-        3. Add quotes from "experts" or "witnesses"
-        4. Include some absurd but entertaining details
-        5. End with a humorous twist or unexpected conclusion
+        # Limit the length to avoid complex prompts
+        return ' '.join(prompt.split()[:20])
+    
+    def _parse_json_response(self, response: str) -> Dict[str, Any]:
+        """Parse JSON response, handling various formats and fallbacks."""
+        try:
+            # First try to parse the entire response
+            return json.loads(response)
+        except json.JSONDecodeError:
+            logger.warning("Failed to parse full JSON response, trying to extract JSON from text...")
+            
+            # Try to find JSON-like content between triple backticks if present
+            json_match = re.search(r'```(?:json)?\s*({.*?})\s*```', response, re.DOTALL)
+            if json_match:
+                try:
+                    return json.loads(json_match.group(1))
+                except json.JSONDecodeError:
+                    logger.warning("Failed to parse JSON from code block")
+            
+            # If we still don't have valid JSON, create a structured response
+            logger.info("Falling back to text format...")
+            article = response.strip()
+            first_sentence = article.split('.')[0] if '.' in article else article
+            
+            # Create safe image prompts
+            safe_prompt = self._clean_image_prompt(f"news article illustration of {first_sentence}")
+            
+            return {
+                "title": f"Breaking: {first_sentence}",
+                "article": article,
+                "category": random.choice(self.categories),
+                "image_prompt": safe_prompt,
+                "scene_prompt": safe_prompt
+            }
+    
+    def generate_article(self) -> Dict[str, Any]:
+        """Generate a complete news article with title, content, and images."""
+        # Select random ball type and category
+        ball_type = random.choice(self.ball_types)
+        category = random.choice(self.categories)
         
-        Important guidelines:
-        1. Make it sound like a real news article but with absurd content
-        2. Include specific locations, dates, and "facts"
-        3. Use journalistic language and structure
-        4. Include a [SCENE] marker where an illustration would be most impactful
-        5. Make it entertaining but not offensive
-        
-        You MUST return ONLY a valid JSON object with the following structure:
-        {{
-            "title": "A catchy, news-style headline",
-            "category": "The news category",
-            "date": "A realistic date for the article",
-            "article": "The full article text with [SCENE] marker where appropriate",
-            "image_prompt": "A detailed prompt for generating an illustration of the article's key scene",
-            "scene_prompt": "A detailed prompt for generating an illustration of the scene marked with [SCENE]",
-            "tags": ["news", "humor", "ball", "satire", "funny", "generated", "fake-news", "parody", "{category}"]
-        }}
-        
-        Do not include any other text, markdown formatting, or code blocks. Return ONLY the JSON object."""
-        
-        data = {
-            "model": "gemma3:12b",
-            "keep_alive": 0,
-            "prompt": prompt,
-            "stream": False,
-            "format": "json"
-        }
+        # Generate the article
+        article_prompt = f"""Write a humorous fake news article about a {ball_type} in the {category} category.
+The article should be around 300-400 words and follow a typical news article structure.
+Make it engaging and humorous, but keep it family-friendly and safe.
+Include a [SCENE] marker where you want an image to be inserted.
+The article should be in JSON format with the following structure:
+{{
+    "title": "A creative title for the article",
+    "article": "The article content with [SCENE] marker",
+    "category": "{category}",
+    "image_prompt": "A family-friendly prompt for generating the main image",
+    "scene_prompt": "A family-friendly prompt for generating the scene image"
+}}
+
+Important: 
+1. Return ONLY the JSON object, no additional text or formatting
+2. Keep all content family-friendly and safe
+3. Avoid any violent or dangerous scenarios"""
         
         try:
-            response = requests.post(self.url, json=data)
-            response.raise_for_status()
-            result = response.json()["response"]
+            # Generate article content using the LLM provider
+            article_json = self.llm_provider.generate_content(article_prompt)
+            article_data = self._parse_json_response(article_json)
             
-            # Try to parse the JSON response
-            try:
-                # First try to parse the entire response
-                article_data = json.loads(result)
-            except json.JSONDecodeError:
-                print("Failed to parse full JSON response, trying to extract JSON from text...")
-                # Try to find JSON-like content between triple backticks if present
-                json_match = re.search(r'```(?:json)?\s*({.*?})\s*```', result, re.DOTALL)
-                if json_match:
-                    try:
-                        article_data = json.loads(json_match.group(1))
-                    except json.JSONDecodeError:
-                        print("Failed to parse JSON from code block, falling back to text format")
-                        article_data = None
-                else:
-                    print("No JSON found in response, falling back to text format")
-                    article_data = None
+            # Validate and ensure all required fields are present
+            required_fields = {
+                "title": f"Breaking: {ball_type.capitalize()} Makes Headlines",
+                "article": article_json,
+                "category": category,
+                "image_prompt": self._clean_image_prompt(f"news article illustration of {ball_type}"),
+                "scene_prompt": self._clean_image_prompt(f"news article illustration of {ball_type}")
+            }
             
-            # If we still don't have valid JSON, fall back to text format
-            if not article_data:
-                print("Falling back to text format...")
-                article_data = {
-                    "title": f"Breaking: {selected_ball.capitalize()} Makes Headlines",
-                    "category": category,
-                    "date": datetime.now().strftime("%B %d, %Y"),
-                    "article": result,
-                    "image_prompt": f"news article illustration of {selected_ball}",
-                    "scene_prompt": f"news article illustration of {selected_ball}",
-                    "tags": ["news", "humor", "ball", "satire", "funny", "generated", "fake-news", "parody", category]
-                }
+            # Update missing fields with defaults
+            for field, default_value in required_fields.items():
+                if field not in article_data or not article_data[field]:
+                    logger.warning(f"Missing or empty field: {field}, using default")
+                    article_data[field] = default_value
             
-            # Validate the required fields
-            required_fields = ["title", "category", "date", "article", "image_prompt", "scene_prompt", "tags"]
-            for field in required_fields:
-                if field not in article_data:
-                    print(f"Missing required field: {field}")
-                    if field == "tags":
-                        article_data[field] = ["news", "humor", "ball", "satire", "funny", "generated", "fake-news", "parody", category]
-                    else:
-                        article_data[field] = f"Missing {field}"
+            # Clean image prompts
+            article_data['image_prompt'] = self._clean_image_prompt(article_data['image_prompt'])
+            article_data['scene_prompt'] = self._clean_image_prompt(article_data['scene_prompt'])
             
-            # Clean up any markdown formatting that might have slipped through
-            for field in article_data:
-                if isinstance(article_data[field], str):
-                    article_data[field] = article_data[field].replace('```json', '').replace('```', '').strip()
+            # Generate main image
+            image_path = None
+            if self.llm_provider.generate_image:
+                try:
+                    image_url = self.llm_provider.generate_image(article_data['image_prompt'])
+                    if image_url:
+                        image_path = download_and_save_image(image_url, "main")
+                except Exception as e:
+                    logger.error(f"Error generating main image: {e}")
             
-            return article_data
+            # Generate scene image if there's a scene marker
+            scene_image_path = None
+            if '[SCENE]' in article_data['article'] and self.llm_provider.generate_image:
+                try:
+                    scene_url = self.llm_provider.generate_image(article_data['scene_prompt'])
+                    if scene_url:
+                        scene_image_path = download_and_save_image(scene_url, "scene")
+                except Exception as e:
+                    logger.error(f"Error generating scene image: {e}")
+            
+            # Add model tags
+            article_data['tags'] = [
+                'news', 'humor', 'ball', 'satire', 'funny', 'generated', 'fake-news', 'parody',
+                article_data['category'],
+                self.llm_provider.__class__.__name__.lower().replace('provider', ''),
+                self.llm_provider.model
+            ]
+            
+            # Create the news article
+            filename = create_news_article(article_data, image_path, scene_image_path)
+            
+            return {
+                'filename': filename,
+                'article_data': article_data,
+                'image_path': image_path,
+                'scene_image_path': scene_image_path
+            }
             
         except Exception as e:
-            print(f"Error generating news article: {e}")
-            return None 
+            logger.error(f"Error generating article: {e}")
+            raise 

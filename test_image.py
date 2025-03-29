@@ -4,6 +4,7 @@ import requests
 import json
 from datetime import datetime
 import time
+from balls_generation.llm_providers import get_llm_provider
 
 def generate_image_with_model(prompt, model_name, base_url="http://192.168.1.9:7860"):
     """Generate an image using ComfyUI API with a specific model"""
@@ -215,4 +216,22 @@ def main():
     print("\nTesting complete! Check the test_images directory for results.")
 
 if __name__ == "__main__":
+    # Get the provider
+    provider = get_llm_provider()
+
+    # Print which provider we're using
+    print(f"Using provider: {provider.__class__.__name__}")
+
+    # Try to generate an image
+    prompt = "A photorealistic image of a tennis ball having a tea party with other sports balls, sitting at a tiny table with tiny teacups, soft lighting, high quality"
+    try:
+        image_url = provider.generate_image(prompt)
+        if image_url:
+            print("\nGenerated image URL:")
+            print(image_url)
+        else:
+            print("\nImage generation not supported or failed")
+    except Exception as e:
+        print(f"Error: {e}")
+
     main() 
