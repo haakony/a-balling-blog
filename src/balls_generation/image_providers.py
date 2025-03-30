@@ -1,96 +1,111 @@
-"""Image generation providers module."""
+"""Image generation provider implementations."""
 
 import os
 import logging
+import time
 from abc import ABC, abstractmethod
-from datetime import datetime
+from typing import Optional
 import requests
+from datetime import datetime
+from dotenv import load_dotenv
 
-from .config.settings import (
-    IMAGES_DIR, OPENAI_API_KEY, OPENAI_IMAGE_MODEL,
-    OPENAI_IMAGE_QUALITY, OPENAI_IMAGE_SIZE,
-    COMFYUI_API_URL, IMAGE_STEPS, IMAGE_CFG, IMAGE_SAMPLER, IMAGE_MODEL
-)
+from openai import OpenAI
 
+# Get logger without configuring it
 logger = logging.getLogger(__name__)
 
+# Load environment variables
+load_dotenv()
+
 class ImageProvider(ABC):
-    """Base class for image generation providers."""
+    """Abstract base class for image providers."""
     
     @abstractmethod
-    def generate_image(self, prompt: str) -> str:
-        """Generate an image from a prompt and return the URL."""
+    def generate_image(self, prompt: str) -> Optional[str]:
+        """Generate an image from a prompt.
+        
+        Returns:
+            Optional[str]: Path to the generated image, or None if generation failed
+        """
         pass
-    
-    def download_and_save_image(self, image_url: str, filepath: str) -> bool:
-        """Download and save an image from a URL."""
-        try:
-            response = requests.get(image_url)
-            if response.status_code == 200:
-                with open(filepath, "wb") as f:
-                    f.write(response.content)
-                return True
-            else:
-                logger.error(f"Failed to download image: {response.status_code}")
-                return False
-        except Exception as e:
-            logger.error(f"Error downloading image: {e}")
-            return False
 
 class DalleProvider(ImageProvider):
     """DALL-E image generation provider."""
     
-    def __init__(self, api_key: str = None):
-        """Initialize the DALL-E provider."""
-        self.api_key = api_key or OPENAI_API_KEY
-        if not self.api_key:
-            raise ValueError("OpenAI API key not found in environment variables")
-            
-        self.api_url = "https://api.openai.com/v1/images/generations"
-        self.headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
+    def __init__(self):
+        api_key = os.getenv('OPENAI_API_KEY')
+        if not api_key:
+            raise ValueError("OPENAI_API_KEY environment variable is not set")
+        
+        self.client = OpenAI(api_key=api_key)
+        self.model = os.getenv('OPENAI_IMAGE_MODEL', 'dall-e-3')
+        self.quality = os.getenv('OPENAI_IMAGE_QUALITY', 'standard')
+        self.size = os.getenv('OPENAI_IMAGE_SIZE', '1024x1024')
+        logger.info(f"Initialized DalleProvider with model: {self.model}")
     
-    def generate_image(self, prompt: str) -> str:
-        """Generate an image using DALL-E API."""
+    def generate_image(self, prompt: str) -> Optional[str]:
+        """Generate an image using DALL-E."""
+        logger.info(f"Generating image with {self.model}")
         try:
-            data = {
-                "model": OPENAI_IMAGE_MODEL,
-                "prompt": prompt,
-                "n": 1,
-                "size": OPENAI_IMAGE_SIZE,
-                "quality": OPENAI_IMAGE_QUALITY
-            }
+            response = self.client.images.generate(
+                model=self.model,
+                prompt=prompt,
+                size=self.size,
+                quality=self.quality,
+                n=1
+            )
             
-            response = requests.post(self.api_url, headers=self.headers, json=data)
-            if response.status_code == 200:
-                return response.json()["data"][0]["url"]
+            # Create images directory if it doesn't exist
+            images_dir = "static/images"
+            os.makedirs(images_dir, exist_ok=True)
+            
+            # Generate a unique filename
+            timestamp = datetime.now().strftime("%H%M%S")
+            filename = f"dalle-{timestamp}.png"
+            filepath = os.path.join(images_dir, filename)
+            
+            # Download and save the image
+            image_url = response.data[0].url
+            image_response = requests.get(image_url)
+            
+            if image_response.status_code == 200:
+                with open(filepath, "wb") as f:
+                    f.write(image_response.content)
+                logger.info(f"Image saved to: {filepath}")
+                return filename
             else:
-                logger.error(f"DALL-E API error: {response.text}")
+                logger.error(f"Failed to download image: {image_response.status_code}")
                 return None
+                
         except Exception as e:
-            logger.error(f"Error generating image with DALL-E: {e}")
+            logger.error(f"Error generating image: {e}")
             return None
 
 class ComfyUIProvider(ImageProvider):
     """ComfyUI image generation provider."""
     
-    def __init__(self, base_url: str = None):
-        """Initialize the ComfyUI provider."""
-        self.base_url = base_url or COMFYUI_API_URL
-        self.headers = {"Content-Type": "application/json"}
+    def __init__(self):
+        self.api_url = os.getenv('COMFYUI_API_URL', 'http://192.168.1.9:7860')
+        self.resolution = os.getenv('IMAGE_RESOLUTION', '768x768')
+        self.steps = int(os.getenv('IMAGE_STEPS', '30'))
+        self.cfg = float(os.getenv('IMAGE_CFG', '7'))
+        self.sampler = os.getenv('IMAGE_SAMPLER', 'DPM++ 2M')
+        self.model = os.getenv('IMAGE_MODEL', 'sd3_medium_incl_clips_t5xxlfp16.safetensors')
+        logger.info(f"Initialized ComfyUIProvider with model: {self.model}")
     
-    def _create_workflow(self, prompt: str) -> dict:
-        """Create the ComfyUI workflow configuration."""
-        return {
+    def generate_image(self, prompt: str) -> Optional[str]:
+        """Generate an image using ComfyUI."""
+        logger.info(f"Generating image with ComfyUI at {self.api_url}")
+        
+        # ComfyUI workflow for text-to-image
+        workflow = {
             "3": {
                 "class_type": "KSampler",
                 "inputs": {
                     "seed": int(datetime.now().timestamp()),
-                    "steps": IMAGE_STEPS,
-                    "cfg": IMAGE_CFG,
-                    "sampler_name": IMAGE_SAMPLER,
+                    "steps": self.steps,
+                    "cfg": self.cfg,
+                    "sampler_name": "dpmpp_2m",
                     "scheduler": "normal",
                     "denoise": 1,
                     "model": ["4", 0],
@@ -102,7 +117,7 @@ class ComfyUIProvider(ImageProvider):
             "4": {
                 "class_type": "CheckpointLoaderSimple",
                 "inputs": {
-                    "ckpt_name": IMAGE_MODEL
+                    "ckpt_name": self.model
                 }
             },
             "5": {
@@ -116,7 +131,7 @@ class ComfyUIProvider(ImageProvider):
             "6": {
                 "class_type": "CLIPTextEncode",
                 "inputs": {
-                    "text": prompt,
+                    "text": f"{prompt}, cute and humorous, vibrant colors, clean lines, detailed background, high quality, realistic, detailed, 4k, 8k",
                     "clip": ["4", 1]
                 }
             },
@@ -142,42 +157,64 @@ class ComfyUIProvider(ImageProvider):
                 }
             }
         }
-    
-    def generate_image(self, prompt: str) -> str:
-        """Generate an image using ComfyUI API."""
+        
         try:
-            workflow = self._create_workflow(prompt)
-            response = requests.post(f"{self.base_url}/prompt", headers=self.headers, json={"prompt": workflow})
-            
+            # Start the image generation
+            response = requests.post(f"{self.api_url}/prompt", json={"prompt": workflow})
             if response.status_code != 200:
-                logger.error(f"ComfyUI API error: {response.text}")
+                logger.error(f"Error starting image generation: {response.text}")
                 return None
             
             prompt_id = response.json()['prompt_id']
+            logger.info(f"Image generation started with prompt ID: {prompt_id}")
             
             # Wait for the image to be generated
             while True:
-                history = requests.get(f"{self.base_url}/history/{prompt_id}").json()
-                if prompt_id in history and 'outputs' in history[prompt_id]:
-                    outputs = history[prompt_id]['outputs']
-                    if '9' in outputs:
-                        image_data = outputs['9']['images'][0]
-                        return f"{self.base_url}/view?filename={image_data['filename']}&subfolder={image_data['subfolder']}&type={image_data['type']}"
+                history = requests.get(f"{self.api_url}/history/{prompt_id}").json()
+                if prompt_id in history:
+                    if 'outputs' in history[prompt_id]:
+                        outputs = history[prompt_id]['outputs']
+                        if '9' in outputs:  # Our SaveImage node
+                            image_data = outputs['9']['images'][0]
+                            
+                            # Create images directory if it doesn't exist
+                            images_dir = "static/images"
+                            os.makedirs(images_dir, exist_ok=True)
+                            
+                            # Generate a unique filename
+                            timestamp = datetime.now().strftime("%H%M%S")
+                            filename = f"comfyui-{timestamp}.png"
+                            filepath = os.path.join(images_dir, filename)
+                            
+                            # Download the image
+                            image_url = f"{self.api_url}/view?filename={image_data['filename']}&subfolder={image_data['subfolder']}&type={image_data['type']}"
+                            image_response = requests.get(image_url)
+                            
+                            if image_response.status_code == 200:
+                                with open(filepath, "wb") as f:
+                                    f.write(image_response.content)
+                                logger.info(f"Image saved to: {filepath}")
+                                return filename
+                            else:
+                                logger.error(f"Failed to download image: {image_response.status_code}")
+                                return None
                 
-                import time
+                logger.info("Waiting for image generation...")
                 time.sleep(1)
                 
         except Exception as e:
-            logger.error(f"Error generating image with ComfyUI: {e}")
+            logger.error(f"Error generating image: {e}")
             return None
 
-def get_image_provider(provider_type: str = None) -> ImageProvider:
-    """Get the appropriate image provider based on configuration."""
-    provider_type = provider_type or IMAGE_PROVIDER
+def get_image_provider() -> ImageProvider:
+    """Factory function to get the configured image provider."""
+    provider = os.getenv('IMAGE_PROVIDER', 'dalle').lower()
     
-    if provider_type == "dalle":
+    if provider == 'dalle':
+        logger.info("Creating DALL-E provider")
         return DalleProvider()
-    elif provider_type == "comfyui":
+    elif provider == 'comfyui':
+        logger.info("Creating ComfyUI provider")
         return ComfyUIProvider()
     else:
-        raise ValueError(f"Unknown image provider type: {provider_type}") 
+        raise ValueError(f"Unknown image provider: {provider}") 

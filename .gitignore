@@ -1,3 +1,7 @@
+# Generated content
+content/en/posts/
+static/images/
+
 # Environment variables
 .env
 .env.*
@@ -35,6 +39,10 @@ ENV/
 *.swp
 *.swo
 
+# Logs
+*.log
+cron.log
+
 # OS
 .DS_Store
 Thumbs.db
@@ -43,7 +51,8 @@ Thumbs.db
 public/
 resources/
 hugo_stats.json
-
-# Logs
-*.log
-logs/
+.hugo_build.lock
+.hugo/
+# Hugo generated content
+public/**/*
+!public/.gitkeep

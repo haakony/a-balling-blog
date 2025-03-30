@@ -1,49 +1,48 @@
-"""Main entry point for the balls generation system."""
+"""Main script for generating content."""
 
 import os
 import random
+import logging
 from datetime import datetime
+
+# Configure logging first
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 from .generators.story import StoryGenerator
 from .generators.news import NewsGenerator
-from .generators.image import ImageGenerator
-from .utils.deploy import deploy
+from .image_providers import get_image_provider
+
+logger = logging.getLogger(__name__)
 
 def main():
-    """Main entry point for the balls generation system."""
-    print("Starting balls generation process...")
-    
-    # Initialize generators
-    story_generator = StoryGenerator()
-    news_generator = NewsGenerator()
-    
-    # Randomly choose between story and news article
-    content_type = random.choice(["story", "news"])
-    
-    if content_type == "story":
-        # Generate story
-        print("Generating story...")
-        story_data = story_generator.generate_story()
+    """Main function to generate content."""
+    try:
+        # Initialize generators
+        story_generator = StoryGenerator()
+        news_generator = NewsGenerator()
         
-        if story_data:
-            # Create blog post without images for now
-            print("Creating blog post...")
-            filename = story_data['filename']
-            print(f"Blog post created at: {filename}")
-    else:
-        # Generate news article
-        print("Generating news article...")
-        article_data = news_generator.generate_article()
+        # Randomly choose between story and news
+        if random.random() < 0.5:
+            logger.info("Generating story...")
+            filename = story_generator.generate_story()
+            if not filename:
+                logger.error("Failed to generate story")
+                return
+        else:
+            logger.info("Generating news article...")
+            filename = news_generator.generate_article()
+            if not filename:
+                logger.error("Failed to generate article")
+                return
         
-        if article_data:
-            # Create news article without images for now
-            print("Creating news article...")
-            filename = article_data['filename']
-            print(f"News article created at: {filename}")
-    
-    # Deploy
-    print("Deploying...")
-    deploy()
+        logger.info(f"Successfully generated content: {filename}")
+        
+    except Exception as e:
+        logger.error(f"Error in main: {str(e)}")
+        raise
 
 if __name__ == "__main__":
     main() 

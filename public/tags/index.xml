@@ -1,1 +1,376 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tags on A balling site</title><link>https://balls.no/tags/</link><description>Recent content in Tags on A balling site</description><generator>Hugo</generator><language>en-US</language><lastBuildDate>Sat, 29 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://balls.no/tags/index.xml" rel="self" type="application/rss+xml"/><item><title>About</title><link>https://balls.no/tags/about/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/about/</guid><description/></item><item><title>Adventure</title><link>https://balls.no/tags/adventure/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/adventure/</guid><description/></item><item><title>Ai</title><link>https://balls.no/tags/ai/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/ai/</guid><description/></item><item><title>Ball</title><link>https://balls.no/tags/ball/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/ball/</guid><description/></item><item><title>Balls</title><link>https://balls.no/tags/balls/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/balls/</guid><description/></item><item><title>Creator</title><link>https://balls.no/tags/creator/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/creator/</guid><description/></item><item><title>Fake-News</title><link>https://balls.no/tags/fake-news/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/fake-news/</guid><description/></item><item><title>Fiction</title><link>https://balls.no/tags/fiction/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/fiction/</guid><description/></item><item><title>Funny</title><link>https://balls.no/tags/funny/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/funny/</guid><description/></item><item><title>Generated</title><link>https://balls.no/tags/generated/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/generated/</guid><description/></item><item><title>Generation</title><link>https://balls.no/tags/generation/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/generation/</guid><description/></item><item><title>Humor</title><link>https://balls.no/tags/humor/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/humor/</guid><description/></item><item><title>Llama3.1:8b</title><link>https://balls.no/tags/llama3.18b/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/llama3.18b/</guid><description/></item><item><title>News</title><link>https://balls.no/tags/news/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/news/</guid><description/></item><item><title>Ollama</title><link>https://balls.no/tags/ollama/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/ollama/</guid><description/></item><item><title>Parody</title><link>https://balls.no/tags/parody/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/parody/</guid><description/></item><item><title>Random</title><link>https://balls.no/tags/random/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/random/</guid><description/></item><item><title>Satire</title><link>https://balls.no/tags/satire/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/satire/</guid><description/></item><item><title>Sports</title><link>https://balls.no/tags/sports/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/sports/</guid><description/></item><item><title>Stories</title><link>https://balls.no/tags/stories/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/stories/</guid><description/></item><item><title>Story</title><link>https://balls.no/tags/story/</link><pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate><guid>https://balls.no/tags/story/</guid><description/></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on A balling site</title>
+    <link>http://192.168.1.12:1313/tags/</link>
+    <description>Recent content in Tags on A balling site</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <lastBuildDate>Sun, 30 Mar 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://192.168.1.12:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Basketball</title>
+      <link>http://192.168.1.12:1313/tags/basketball/</link>
+      <pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/basketball/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Comfyui</title>
+      <link>http://192.168.1.12:1313/tags/comfyui/</link>
+      <pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/comfyui/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Community Center</title>
+      <link>http://192.168.1.12:1313/tags/community-center/</link>
+      <pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/community-center/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cricket</title>
+      <link>http://192.168.1.12:1313/tags/cricket/</link>
+      <pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/cricket/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Funny</title>
+      <link>http://192.168.1.12:1313/tags/funny/</link>
+      <pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/funny/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Humor</title>
+      <link>http://192.168.1.12:1313/tags/humor/</link>
+      <pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/humor/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kids</title>
+      <link>http://192.168.1.12:1313/tags/kids/</link>
+      <pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/kids/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Llama3.1:8b</title>
+      <link>http://192.168.1.12:1313/tags/llama3.18b/</link>
+      <pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/llama3.18b/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ollama</title>
+      <link>http://192.168.1.12:1313/tags/ollama/</link>
+      <pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/ollama/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ping Pong</title>
+      <link>http://192.168.1.12:1313/tags/ping-pong/</link>
+      <pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/ping-pong/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Sd3_medium_incl_clips_t5xxlfp16.safetensors</title>
+      <link>http://192.168.1.12:1313/tags/sd3_medium_incl_clips_t5xxlfp16.safetensors/</link>
+      <pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/sd3_medium_incl_clips_t5xxlfp16.safetensors/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Sports</title>
+      <link>http://192.168.1.12:1313/tags/sports/</link>
+      <pubDate>Sun, 30 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/sports/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>About</title>
+      <link>http://192.168.1.12:1313/tags/about/</link>
+      <pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/about/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ai</title>
+      <link>http://192.168.1.12:1313/tags/ai/</link>
+      <pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Balls</title>
+      <link>http://192.168.1.12:1313/tags/balls/</link>
+      <pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/balls/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Creator</title>
+      <link>http://192.168.1.12:1313/tags/creator/</link>
+      <pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/creator/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Generation</title>
+      <link>http://192.168.1.12:1313/tags/generation/</link>
+      <pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/generation/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>News</title>
+      <link>http://192.168.1.12:1313/tags/news/</link>
+      <pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/news/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Stories</title>
+      <link>http://192.168.1.12:1313/tags/stories/</link>
+      <pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/stories/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Adventure</title>
+      <link>http://192.168.1.12:1313/tags/adventure/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/adventure/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ball</title>
+      <link>http://192.168.1.12:1313/tags/ball/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/ball/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Baseball</title>
+      <link>http://192.168.1.12:1313/tags/baseball/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/baseball/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Bouncy Ball</title>
+      <link>http://192.168.1.12:1313/tags/bouncy-ball/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/bouncy-ball/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Bowling</title>
+      <link>http://192.168.1.12:1313/tags/bowling/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/bowling/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Community</title>
+      <link>http://192.168.1.12:1313/tags/community/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/community/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Dodgeball</title>
+      <link>http://192.168.1.12:1313/tags/dodgeball/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/dodgeball/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Environment</title>
+      <link>http://192.168.1.12:1313/tags/environment/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/environment/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Fake-News</title>
+      <link>http://192.168.1.12:1313/tags/fake-news/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/fake-news/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Family</title>
+      <link>http://192.168.1.12:1313/tags/family/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/family/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Fiction</title>
+      <link>http://192.168.1.12:1313/tags/fiction/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/fiction/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Football</title>
+      <link>http://192.168.1.12:1313/tags/football/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/football/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Funny News</title>
+      <link>http://192.168.1.12:1313/tags/funny-news/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/funny-news/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Funny Story</title>
+      <link>http://192.168.1.12:1313/tags/funny-story/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/funny-story/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Generated</title>
+      <link>http://192.168.1.12:1313/tags/generated/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/generated/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Jungle Gym</title>
+      <link>http://192.168.1.12:1313/tags/jungle-gym/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/jungle-gym/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Llama2</title>
+      <link>http://192.168.1.12:1313/tags/llama2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/llama2/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Local News</title>
+      <link>http://192.168.1.12:1313/tags/local-news/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/local-news/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Oakdale</title>
+      <link>http://192.168.1.12:1313/tags/oakdale/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/oakdale/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Oakwood Park</title>
+      <link>http://192.168.1.12:1313/tags/oakwood-park/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/oakwood-park/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Office Antics</title>
+      <link>http://192.168.1.12:1313/tags/office-antics/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/office-antics/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Office Chaos</title>
+      <link>http://192.168.1.12:1313/tags/office-chaos/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/office-chaos/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Parks and Recreation</title>
+      <link>http://192.168.1.12:1313/tags/parks-and-recreation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/parks-and-recreation/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Parody</title>
+      <link>http://192.168.1.12:1313/tags/parody/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/parody/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ping Pong Ball</title>
+      <link>http://192.168.1.12:1313/tags/ping-pong-ball/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/ping-pong-ball/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Playground</title>
+      <link>http://192.168.1.12:1313/tags/playground/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/playground/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Random</title>
+      <link>http://192.168.1.12:1313/tags/random/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/random/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Rugby Ball</title>
+      <link>http://192.168.1.12:1313/tags/rugby-ball/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/rugby-ball/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Satire</title>
+      <link>http://192.168.1.12:1313/tags/satire/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/satire/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Story</title>
+      <link>http://192.168.1.12:1313/tags/story/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/story/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Strange News</title>
+      <link>http://192.168.1.12:1313/tags/strange-news/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/strange-news/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Stress Ball</title>
+      <link>http://192.168.1.12:1313/tags/stress-ball/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/stress-ball/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Wildlife Encounters</title>
+      <link>http://192.168.1.12:1313/tags/wildlife-encounters/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://192.168.1.12:1313/tags/wildlife-encounters/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>
